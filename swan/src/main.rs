@@ -3,7 +3,7 @@ use std::env;
 use std::process;
 
 fn main() {
-    let config = Config::build(env::args()).unwrap_or_else(|err| {
+    let _config = Config::build(env::args()).unwrap_or_else(|err| {
         println!("Problem parsing arguments: {err}");
         process::exit(1);
     });
