@@ -1,38 +1,42 @@
-use std::env;
+use std::error::Error;
+use swan_about;
 
 pub struct Response {
     pub message: String,
     pub exit_code: i32,
 }
-
 pub struct Config {
-    query: String,
-    file_path: String,
-    ignore_case: bool,
+    command: String,
+    subcommand: String,
 }
 
 impl Config {
     pub fn build(mut args: impl Iterator<Item = String>) -> Result<Config, &'static str> {
         args.next();
 
-        let query = match args.next() {
+        let command = match args.next() {
             Some(arg) => arg,
             None => return Err("Didn't get a query string"),
         };
-
-        let file_path = match args.next() {
+        let subcommand = match args.next() {
             Some(arg) => arg,
-            None => return Err("Didn't get a file path"),
+            None => "".to_string(),
         };
 
-        let ignore_case = env::var("IGNORE_CASE").is_ok();
-
         Ok(Config {
-            query,
-            file_path,
-            ignore_case,
+            command,
+            subcommand,
         })
     }
+}
+
+pub fn run(config: Config) -> Result<(), Box<dyn Error>> {
+    
+    if config.command.eq("about") {
+        swan_about::run();
+    }
+    
+    Ok(())
 }
 
 #[cfg(test)]
