@@ -1,6 +1,4 @@
 use std::error::Error;
-use swan_about;
-use common; 
 
 pub struct Config {
     command: String,
@@ -30,8 +28,10 @@ impl Config {
 pub fn run(config: Config) -> Result<(), Box<dyn Error>> {
     
     if config.command.eq("about") {
-        let _resp = swan_about::run();
+        let _resp = about::run();
     }
+
+    dbg!(config.subcommand);
     
     Ok(())
 }

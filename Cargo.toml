@@ -1,8 +1,8 @@
 [workspace]
 
 members = [
-    "common",
-    "creds",
     "swan",
-    "swan_about",
+    "common",
+    "subcommands/creds",
+    "subcommands/about",
 ]
