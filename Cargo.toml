@@ -1,6 +1,7 @@
 [workspace]
 
 members = [
+    "common",
     "creds",
     "swan",
     "swan_about",

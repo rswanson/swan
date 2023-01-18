@@ -1,10 +1,7 @@
 use std::error::Error;
 use swan_about;
+use common; 
 
-pub struct Response {
-    pub message: String,
-    pub exit_code: i32,
-}
 pub struct Config {
     command: String,
     subcommand: String,
@@ -33,7 +30,7 @@ impl Config {
 pub fn run(config: Config) -> Result<(), Box<dyn Error>> {
     
     if config.command.eq("about") {
-        swan_about::run();
+        let _resp = swan_about::run();
     }
     
     Ok(())
@@ -45,7 +42,7 @@ mod tests {
 
     #[test]
     fn test_response() {
-        let response = Response {
+        let response = common::Response {
             message: "test".to_string(),
             exit_code: 0,
         };
