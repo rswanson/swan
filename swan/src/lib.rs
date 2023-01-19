@@ -32,7 +32,7 @@ pub fn run(config: Config) -> Result<(), Box<dyn Error>> {
 
     dbg!(config.subcommand);
 
-    Ok(())
+Ok(())
 }
 
 #[cfg(test)]
