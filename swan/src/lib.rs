@@ -1,5 +1,5 @@
 use std::error::Error;
-
+#[derive(Debug, PartialEq)]
 pub struct Config {
     command: String,
     subcommand: String,
@@ -26,13 +26,12 @@ impl Config {
 }
 
 pub fn run(config: Config) -> Result<(), Box<dyn Error>> {
-    
     if config.command.eq("about") {
         let _resp = about::run();
     }
 
     dbg!(config.subcommand);
-    
+
     Ok(())
 }
 
@@ -41,11 +40,14 @@ mod tests {
     use super::*;
 
     #[test]
-    fn test_response() {
-        let response = common::Response {
-            message: "test".to_string(),
-            exit_code: 0,
+    fn test_build_config() {
+        let args = vec!["swan".to_string(), "about".to_string(), "test".to_string()];
+        let config = Config::build(args.into_iter());
+        let config = config.unwrap();
+        let valid_config = Config {
+            command: "about".to_string(),
+            subcommand: "test".to_string(),
         };
-        assert_eq!(response.exit_code, 0);
+        assert_eq!(valid_config, config);
     }
 }
