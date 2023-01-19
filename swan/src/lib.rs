@@ -41,13 +41,22 @@ mod tests {
 
     #[test]
     fn test_build_config() {
-        let args = vec!["swan".to_string(), "about".to_string(), "test".to_string()];
-        let config = Config::build(args.into_iter());
-        let config = config.unwrap();
         let valid_config = Config {
             command: "about".to_string(),
             subcommand: "test".to_string(),
         };
+        let args = vec!["swan".to_string(), "about".to_string(), "test".to_string()];
+        let config = Config::build(args.into_iter());
+        let config = config.unwrap();
         assert_eq!(valid_config, config);
+    }
+
+    #[test]
+    fn test_run() {
+        let valid_config = Config {
+            command: "about".to_string(),
+            subcommand: "test".to_string(),
+        };
+        assert!(run(valid_config).is_ok());
     }
 }
