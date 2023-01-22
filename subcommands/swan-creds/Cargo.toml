@@ -1,5 +1,5 @@
 [package]
-name = "creds"
+name = "swan-creds"
 version = "0.1.0"
 edition = "2021"
 

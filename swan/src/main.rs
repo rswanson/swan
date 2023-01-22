@@ -1,7 +1,7 @@
 use std::env;
 use std::process;
-
-use swan::{run, Config};
+use swan_common::Config;
+use swan::run;
 
 fn main() {
     let config = Config::build(env::args()).unwrap_or_else(|err| {

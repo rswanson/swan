@@ -3,7 +3,8 @@ resolver = "2"
 
 members = [
     "swan",
-    "common",
-    "subcommands/creds",
-    "subcommands/about",
+    "swan-common",
+    "subcommands/swan-creds",
+    "subcommands/swan-about",
+    "subcommands/swan-help",
 ]
