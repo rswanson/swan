@@ -1,14 +1,18 @@
+use commands::{get_command_list, Command};
 use swan_common::{Config, Response};
 
+mod commands;
+
 pub fn run(config: Config) -> Response {
-    let help_message = "usage: swan <command> <subcommand>".to_string();
-    
-    Response { message: help_message, exit_code: 0 }
+    let command: &str = config.command.as_ref();
+    let message = "usage";
+
+    Response { message: message.to_string(), exit_code: 0 }
 }
 
 #[cfg(test)]
 mod tests {
-    use super::*;
+    
 
     #[test]
     fn it_works() {
