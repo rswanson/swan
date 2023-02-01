@@ -1,31 +1,37 @@
-use std::{collections::HashMap};
-
+#[derive(Debug, Clone, Copy)]
 pub struct Command {
     pub command: &'static str,
     pub help_message: &'static str,
 }
 
-pub const help: Command = Command {
-    command: "help",
+pub const DEFAULT: Command = Command {
+    command: "default",
     help_message: "usage: swan <command> <subcommand>",
 };
 
-pub const about: Command = Command {
+
+pub const HELP: Command = Command {
+    command: "help",
+    help_message: "usage: swan help <command>",
+};
+
+pub const ABOUT: Command = Command {
     command: "about",
     help_message: "usage: swan about",
 };
 
-pub const creds: Command = Command {
+pub const CREDS: Command = Command {
     command: "creds",
     help_message: "usage: swan creds <cloud_provider>",
 };
 
-pub fn get_command_list<'a>() -> Box<HashMap<&'static str, Command>> {
-    let mut commands = HashMap::new();
-
-    commands.insert(help.command, help);
-    commands.insert(about.command, about);
-    commands.insert(creds.command, creds);
-
-    Box::new(commands)
+impl Command {
+    pub fn parse_command(command: String) -> Command {
+        match command {
+            _ if command == "about" => ABOUT,
+            _ if command == "creds" => CREDS,
+            _ if command == "help" => HELP,
+            _ =>  DEFAULT,
+        }
+    }
 }
