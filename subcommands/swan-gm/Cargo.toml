@@ -7,4 +7,5 @@ edition = "2021"
 
 [dependencies]
 git2 = "0.16.1"
+structopt = "0.3.26"
 swan-common = { path = "../../swan-common" }
