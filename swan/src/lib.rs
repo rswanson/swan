@@ -1,38 +1,19 @@
 use std::error::Error;
-#[derive(Debug, PartialEq)]
-pub struct Config {
-    command: String,
-    subcommand: String,
-}
 
-impl Config {
-    pub fn build(mut args: impl Iterator<Item = String>) -> Result<Config, &'static str> {
-        args.next();
-
-        let command = match args.next() {
-            Some(arg) => arg,
-            None => return Err("Didn't get a query string"),
-        };
-        let subcommand = match args.next() {
-            Some(arg) => arg,
-            None => "".to_string(),
-        };
-
-        Ok(Config {
-            command,
-            subcommand,
-        })
-    }
-}
+use swan_common::{Config, Response};
 
 pub fn run(config: Config) -> Result<(), Box<dyn Error>> {
-    if config.command.eq("about") {
-        let _resp = about::run();
-    }
-
-    dbg!(config.subcommand);
-
-Ok(())
+    let resp = match config.command {
+        _ if config.command == "about" => swan_about::run(),
+        _ if config.command == "creds" => Response {
+            message: "creds".to_string(),
+            exit_code: 0,
+        },
+        _ if config.command == "help" => swan_help::run(config),
+        _ => swan_help::run(config),
+    };
+    println!("{}", resp.message);
+    Ok(())
 }
 
 #[cfg(test)]
