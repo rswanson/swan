@@ -9,7 +9,6 @@ pub const DEFAULT: Command = Command {
     help_message: "usage: swan <command> <subcommand>",
 };
 
-
 pub const HELP: Command = Command {
     command: "help",
     help_message: "usage: swan help <command>",
@@ -31,7 +30,7 @@ impl Command {
             _ if command == "about" => ABOUT,
             _ if command == "creds" => CREDS,
             _ if command == "help" => HELP,
-            _ =>  DEFAULT,
+            _ => DEFAULT,
         }
     }
 }
