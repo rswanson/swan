@@ -9,6 +9,7 @@ pub fn run(config: Config) -> Result<(), Box<dyn Error>> {
             message: "creds".to_string(),
             exit_code: 0,
         },
+        _ if config.command == "gm" => swan_gm::run(config),
         _ if config.command == "help" => swan_help::run(config),
         _ => swan_help::run(config),
     };

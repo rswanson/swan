@@ -7,4 +7,5 @@ members = [
     "subcommands/swan-creds",
     "subcommands/swan-about",
     "subcommands/swan-help",
+    "subcommands/swan-gm",
 ]
