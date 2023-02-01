@@ -1,10 +1,10 @@
 use swan_common::{Config, Response};
 
-use git2::{build::RepoBuilder, Repository, RepositoryState};
+use git2::{build::RepoBuilder, Repository};
 
 use std::io::{self, Write};
+use std::path::Path;
 use std::str;
-use std::{path::Path};
 
 pub fn run(_config: Config) -> Response {
     let repo_url = "https://github.com/rswanson/dotfiles.git";
@@ -21,7 +21,7 @@ pub fn run(_config: Config) -> Response {
     if analysis.0.is_fast_forward() {
         println!("Doing a fast forward");
         // do a fast forward
-        let refname = format!("refs/heads/{}", remote_branch);
+        let refname = format!("refs/heads/{remote_branch}");
         match repo.find_reference(&refname) {
             Ok(mut r) => {
                 fast_forward(&repo, &mut r, &fetch_commit).unwrap();
@@ -35,37 +35,25 @@ pub fn run(_config: Config) -> Response {
                     fetch_commit.id(),
                     true,
                     &format!("Setting {} to {}", remote_branch, fetch_commit.id()),
-                ).unwrap();
+                )
+                .unwrap();
                 repo.set_head(&refname).unwrap();
                 repo.checkout_head(Some(
                     git2::build::CheckoutBuilder::default()
                         .allow_conflicts(true)
                         .conflict_style_merge(true)
                         .force(),
-                )).unwrap();
+                ))
+                .unwrap();
             }
         };
     }
-    // let message = match status {
-    //     RepositoryState::Clean => "clean",
-    //     RepositoryState::Merge => "merge",
-    //     RepositoryState::Revert => "revert",
-    //     RepositoryState::RevertSequence => "revertsequence",
-    //     RepositoryState::CherryPick => "cherrypick",
-    //     RepositoryState::CherryPickSequence => "cherrypicksequence",
-    //     RepositoryState::Bisect => "bisect",
-    //     RepositoryState::Rebase => "rebase",
-    //     RepositoryState::RebaseInteractive => "rebasei",
-    //     RepositoryState::RebaseMerge => "rebasem",
-    //     RepositoryState::ApplyMailbox => "applymail",
-    //     RepositoryState::ApplyMailboxOrRebase => "applemailorrebase",
-    // };
+
     Response {
         message: "".to_string(),
         exit_code: 0,
     }
 }
-
 
 fn fast_forward(
     repo: &Repository,
@@ -77,7 +65,7 @@ fn fast_forward(
         None => String::from_utf8_lossy(lb.name_bytes()).to_string(),
     };
     let msg = format!("Fast-Forward: Setting {} to id: {}", name, rc.id());
-    println!("{}", msg);
+    println!("{msg}");
     lb.set_target(rc.id(), &msg)?;
     repo.set_head(&name)?;
     repo.checkout_head(Some(
@@ -148,7 +136,7 @@ fn do_fetch<'a>(
     }
 
     let fetch_head = repo.find_reference("FETCH_HEAD")?;
-    Ok(repo.reference_to_annotated_commit(&fetch_head)?)
+    repo.reference_to_annotated_commit(&fetch_head)
 }
 
 #[cfg(test)]
