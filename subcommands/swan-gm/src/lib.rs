@@ -1,15 +1,17 @@
 use swan_common::{Config, Response};
 
-use git2::{Repository, build::RepoBuilder, RepositoryState};
+use git2::{build::RepoBuilder, Repository, RepositoryState};
 use std::path::Path;
 
-pub fn run(config: Config) -> Response {
+pub fn run(_config: Config) -> Response {
     let repo_url = "https://github.com/rswanson/dotfiles.git";
     let repo_clone_path = "/Users/swanpro/.dotfiles";
 
     let mut builder = RepoBuilder::new();
     let repo = Repository::open(Path::new(repo_clone_path)).unwrap_or_else(|_| {
-        builder.clone(repo_url, Path::new(repo_clone_path)).expect("Could not clone repo")
+        builder
+            .clone(repo_url, Path::new(repo_clone_path))
+            .expect("Could not clone repo")
     });
 
     let status = repo.state();
