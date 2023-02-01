@@ -10,3 +10,5 @@ swan-common = { path = "../swan-common" }
 swan-about = { path = "../subcommands/swan-about" }
 swan-help = { path = "../subcommands/swan-help"}
 swan-gm = { path = "../subcommands/swan-gm"}
+indicatif = "0.17.3"
+console = "0.15.5"

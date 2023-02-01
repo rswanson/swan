@@ -2,53 +2,69 @@ use swan_common::{Config, Response};
 
 use git2::{build::RepoBuilder, Repository};
 
+use std::env;
 use std::io::{self, Write};
 use std::path::Path;
 use std::str;
 
-pub fn run(_config: Config) -> Response {
-    let repo_url = "https://github.com/rswanson/dotfiles.git";
-    let repo_clone_path = "/Users/swanpro/.dotfiles";
+use indicatif::{HumanDuration, MultiProgress, ProgressBar, ProgressStyle};
+use console::{style, Emoji};
 
-    let mut builder = RepoBuilder::new();
-    let repo = Repository::open(Path::new(repo_clone_path))
-        .unwrap_or_else(|_| builder.clone(repo_url, Path::new(repo_clone_path)).unwrap());
-    let remote_name = "origin";
-    let remote_branch = "main";
-    let mut remote = repo.find_remote(remote_name).unwrap();
-    let fetch_commit = do_fetch(&repo, &[remote_branch], &mut remote).unwrap();
-    let analysis = repo.merge_analysis(&[&fetch_commit]).unwrap();
-    if analysis.0.is_fast_forward() {
-        println!("Doing a fast forward");
-        // do a fast forward
-        let refname = format!("refs/heads/{remote_branch}");
-        match repo.find_reference(&refname) {
-            Ok(mut r) => {
-                fast_forward(&repo, &mut r, &fetch_commit).unwrap();
-            }
-            Err(_) => {
-                // The branch doesn't exist so just set the reference to the
-                // commit directly. Usually this is because you are pulling
-                // into an empty repository.
-                repo.reference(
-                    &refname,
-                    fetch_commit.id(),
-                    true,
-                    &format!("Setting {} to {}", remote_branch, fetch_commit.id()),
-                )
-                .unwrap();
-                repo.set_head(&refname).unwrap();
-                repo.checkout_head(Some(
-                    git2::build::CheckoutBuilder::default()
-                        .allow_conflicts(true)
-                        .conflict_style_merge(true)
-                        .force(),
-                ))
-                .unwrap();
-            }
-        };
+static RUNNER: Emoji<'_, '_> = Emoji("🏃", ":O");    
+static SPARKLE: Emoji<'_, '_> = Emoji("✨ ", ":-)");
+
+pub fn run(config: Config) -> Response {
+    if config.command == "gm" {
+        let repo_url = "https://github.com/rswanson/dotfiles.git";
+        let mut repo_clone_path = env::var("HOME").unwrap();
+        repo_clone_path.push_str("/.dotfiles");
+
+        let mut builder = RepoBuilder::new();
+        let repo = Repository::open(Path::new(&repo_clone_path)).unwrap_or_else(|_| {
+            builder
+                .clone(repo_url, Path::new(&repo_clone_path))
+                .unwrap()
+        });
+
+        let remote_name = "origin";
+        let remote_branch = "main";
+        let mut remote = repo.find_remote(remote_name).unwrap();
+
+        let fetch_commit = do_fetch(&repo, &[remote_branch], &mut remote).unwrap();
+
+        let analysis = repo.merge_analysis(&[&fetch_commit]).unwrap();
+
+        if analysis.0.is_fast_forward() {
+            println!("Doing a fast forward {}", RUNNER);
+            // do a fast forward
+            let refname = format!("refs/heads/{remote_branch}");
+            match repo.find_reference(&refname) {
+                Ok(mut r) => {
+                    fast_forward(&repo, &mut r, &fetch_commit).unwrap();
+                }
+                Err(_) => {
+                    // The branch doesn't exist so just set the reference to the
+                    // commit directly. Usually this is because you are pulling
+                    // into an empty repository.
+                    repo.reference(
+                        &refname,
+                        fetch_commit.id(),
+                        true,
+                        &format!("Setting {} to {}", remote_branch, fetch_commit.id()),
+                    )
+                    .unwrap();
+                    repo.set_head(&refname).unwrap();
+                    repo.checkout_head(Some(
+                        git2::build::CheckoutBuilder::default()
+                            .allow_conflicts(true)
+                            .conflict_style_merge(true)
+                            .force(),
+                    ))
+                    .unwrap();
+                }
+            };
+        }
     }
-
     Response {
         message: "".to_string(),
         exit_code: 0,
