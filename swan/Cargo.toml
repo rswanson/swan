@@ -9,3 +9,4 @@ edition = "2021"
 swan-common = { path = "../swan-common" }
 swan-about = { path = "../subcommands/swan-about" }
 swan-help = { path = "../subcommands/swan-help"}
+swan-gm = { path = "../subcommands/swan-gm"}
