@@ -7,11 +7,9 @@ use std::io::{self, Write};
 use std::path::Path;
 use std::str;
 
-use indicatif::{HumanDuration, MultiProgress, ProgressBar, ProgressStyle};
-use console::{style, Emoji};
+use console::{Emoji};
 
-static RUNNER: Emoji<'_, '_> = Emoji("🏃", ":O");    
-static SPARKLE: Emoji<'_, '_> = Emoji("✨ ", ":-)");
+static RUNNER: Emoji<'_, '_> = Emoji("🏃", ":O");
 
 pub fn run(config: Config) -> Response {
     if config.command == "gm" {
@@ -64,6 +62,13 @@ pub fn run(config: Config) -> Response {
                 }
             };
         }
+
+        // execute a bash script to do the actual work  
+        let mut child = std::process::Command::new("bash")
+            .arg("-c")
+            .arg("cd ~/.dotfiles && ./install.sh")
+            .spawn()
+            .expect("failed to execute process");
     }
     Response {
         message: "".to_string(),
