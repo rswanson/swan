@@ -1,0 +1,13 @@
+[package]
+name = "swan-gm"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+console = "0.15.5"
+git2 = "0.16.1"
+indicatif = "0.17.3"
+structopt = "0.3.26"
+swan-common = { path = "../../swan-common" }
